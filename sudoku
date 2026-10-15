@@ -1,0 +1,160 @@
+1 := λa b c d e f g h i. a
+2 := λa b c d e f g h i. b
+3 := λa b c d e f g h i. c
+4 := λa b c d e f g h i. d
+5 := λa b c d e f g h i. e
+6 := λa b c d e f g h i. f
+7 := λa b c d e f g h i. g
+8 := λa b c d e f g h i. h
+9 := λa b c d e f g h i. i
+T := λx y. x
+F := λx y. y
+C := λz x y. y
+E := T 9
+ta := λa b. a (λx. b)
+isE := λa. a C C C C C C C C C T
+AND9 := λa b c d e f g h i. a (b (c (d (e (f (g (h i F) F) F) F) F) F) F) F
+AND3 := λa b c. a (b c F) F
+MAP := λj a. a (λa b c d e f g h i x. x (j a) (j b) (j c) (j d) (j e) (j f) (j g) (j h) (j i))
+CCTN := λa b c d e f g h i x. i (h (g (f (e (d (c (b (a x))))))))
+RERCCR := 
+  λn. n CCTN
+    (λ11 12 13 14 15 16 17 18 19
+      21 22 23 24 25 26 27 28 29
+      31 32 33 34 35 36 37 38 39
+      41 42 43 44 45 46 47 48 49
+      51 52 53 54 55 56 57 58 59
+      61 62 63 64 65 66 67 68 69
+      71 72 73 74 75 76 77 78 79
+      81 82 83 84 85 86 87 88 89
+      91 92 93 94 95 96 97 98 99 f.
+        f
+        (λg. g 11 21 31 41 51 61 71 81 91)
+        (λg. g 12 22 32 42 52 62 72 82 92)
+        (λg. g 13 23 33 43 53 63 73 83 93)
+        (λg. g 14 24 34 44 54 64 74 84 94)
+        (λg. g 15 25 35 45 55 65 75 85 95)
+        (λg. g 16 26 36 46 56 66 76 86 96)
+        (λg. g 17 27 37 47 57 67 77 87 97)
+        (λg. g 18 28 38 48 58 68 78 88 98)
+        (λg. g 19 29 39 49 59 69 79 89 99)
+    )
+REBRC := 
+  λn. n CCTN
+    (λ11 12 13 14 15 16 17 18 19
+      21 22 23 24 25 26 27 28 29
+      31 32 33 34 35 36 37 38 39
+      41 42 43 44 45 46 47 48 49
+      51 52 53 54 55 56 57 58 59
+      61 62 63 64 65 66 67 68 69
+      71 72 73 74 75 76 77 78 79
+      81 82 83 84 85 86 87 88 89
+      91 92 93 94 95 96 97 98 99 f.
+        f
+        (λg. g 11 12 13 21 22 23 31 32 33)
+        (λg. g 14 15 16 24 25 26 34 35 36)
+        (λg. g 17 18 19 27 28 29 37 38 39)
+        (λg. g 41 42 43 51 52 53 61 62 63)
+        (λg. g 44 45 46 54 55 56 64 65 66)
+        (λg. g 47 48 49 57 58 59 67 68 69)
+        (λg. g 71 72 73 81 82 83 91 92 93)
+        (λg. g 74 75 76 84 85 86 94 95 96)
+        (λg. g 77 78 79 87 88 89 97 98 99)
+    )
+MARK := 
+  λn a.
+    a
+    (
+      n
+        (λa b c d e f g h i x. x T b c d e f g h i)
+        (λa b c d e f g h i x. x a T c d e f g h i)
+        (λa b c d e f g h i x. x a b T d e f g h i)
+        (λa b c d e f g h i x. x a b c T e f g h i)
+        (λa b c d e f g h i x. x a b c d T f g h i)
+        (λa b c d e f g h i x. x a b c d e T g h i)
+        (λa b c d e f g h i x. x a b c d e f T h i)
+        (λa b c d e f g h i x. x a b c d e f g T i)
+        (λa b c d e f g h i x. x a b c d e f g h T)
+    )
+:set no-normalize-defs
+Y := λf. (λx. x x) (λx. f (x x))
+VALID_ROW := λx. Y (λr a b. isE (a 1) (b AND9) (r (λx. ta a x E) (MARK (a 1) b))) x (λa. a F F F F F F F F F)
+VALID_ROWS := λa. MAP VALID_ROW a AND9
+CHECKER := λa. AND3 (VALID_ROWS a) (VALID_ROWS (RERCCR a)) (VALID_ROWS (REBRC a))
+:set normalize-defs
+example_sudoku1 := # Should return F because it's not valid for columns
+  λf. f
+    (λg. g 1 2 3 4 5 6 7 8 9)
+    (λg. g 4 5 6 7 8 9 1 2 3)
+    (λg. g 7 8 9 1 2 3 4 5 6)
+    (λg. g 1 2 3 4 5 6 7 8 9)
+    (λg. g 4 5 6 7 8 9 1 2 3)
+    (λg. g 7 8 9 1 2 3 4 5 6)
+    (λg. g 1 2 3 4 5 6 7 8 9)
+    (λg. g 4 5 6 7 8 9 1 2 3)
+    (λg. g 7 8 9 1 2 3 4 5 6)
+example_sudoku2 := # Should return F because it's not valid for boxes
+  λf. f
+    (λg. g 1 2 3 4 5 6 7 8 9)
+    (λg. g 2 3 4 5 6 7 8 9 1)
+    (λg. g 3 4 5 6 7 8 9 1 2)
+    (λg. g 4 5 6 7 8 9 1 2 3)
+    (λg. g 5 6 7 8 9 1 2 3 4)
+    (λg. g 6 7 8 9 1 2 3 4 5)
+    (λg. g 7 8 9 1 2 3 4 5 6)
+    (λg. g 8 9 1 2 3 4 5 6 7)
+    (λg. g 9 1 2 3 4 5 6 7 8)
+example_sudoku3 := # Should return T
+  λf. f
+    (λg. g 1 2 3 4 5 6 7 8 9)
+    (λg. g 4 5 6 7 8 9 1 2 3)
+    (λg. g 7 8 9 1 2 3 4 5 6)
+    (λg. g 2 3 4 5 6 7 8 9 1)
+    (λg. g 5 6 7 8 9 1 2 3 4)
+    (λg. g 8 9 1 2 3 4 5 6 7)
+    (λg. g 3 4 5 6 7 8 9 1 2)
+    (λg. g 6 7 8 9 1 2 3 4 5)
+    (λg. g 9 1 2 3 4 5 6 7 8)
+#CHECKER example_sudoku3
+:set max-steps 0
+#* 
+=================PLAN================ (complete, yay)
+Make a sudoku checker
+* The sudoku
+  - Is a nested tuple with opening by applying with the row number and column number
+  - (λf. f (λg. g...) (λg. g ...) ... (λg. g ...))
+  - with each tuple having 9 elements, the g tuple contains 9 numbers.
+  
+* Numbers
+  - Are really just selectors of 9 elements
+  - Easier to control than actual numerals
+  
+* Thingy
+  - AND9: a 9-input AND gate.
+  - AND3: a 3-input AND gate.
+  - ta: tail function.
+  - MARK: mark the bth element of a (the 9-tuple full of F) by turning it into a T
+  - MAP: function that applies a function to every tuple of that function.
+  - isE: checks if whether the input is E rather than 1-9
+  - CCTN: Concatenates the sudoku into a tuple with 81 elements
+  - RERCCR: Reorder them to make every column a row (r,c) -> (c,r)
+  - REBRC: Reorder them to make every box a row
+  - MAP: map every element of the 9-tuple to the function. tuple(map(j, a)) in Python idk
+  - VALID_ROW: recursively get the first element of a tuple of 9 elements,
+    run that through the mark and then transforming the tuple
+    (a,b,c,d,e,f,g,h,i) → (b,c,d,e,f,g,h,i,E)
+    repeat until first is E
+    this is made for the length of the tuple to not be changing and make the head function also be fixed
+    And then apply ALLT to that. oh and the starting 9-tuple that gets marked is (λa.a F F F F F F F F F)
+  - VALID_ROWS: check if all rows of a sudoku is valid.
+  - CHECKER: Checks if all rows, columns and boxes are all unique. The thing I made.
+notes:
+  - To those not knowing how to see the entire CHECKER or anything that's in the no normalize defs section
+    without frying your computer, type in ":set max-steps 0", hit enter and then enter in the thing you 
+    want to see.
+  - Also, if you want to like CHECK example_sudoku_ you should:
+    + Type in "CHECKE example_sudoku" and yes the missing R is intentional
+    + move your cursor to where the R is supposed to be and type in R.
+    + Or, type "#CHECKER example_sudoku" and then remove the #.
+  - You might need to crank those settings up a little
+*#
