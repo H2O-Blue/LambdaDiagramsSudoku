@@ -115,8 +115,6 @@ example_sudoku3 := # Should return T
     (λg. g 3 4 5 6 7 8 9 1 2)
     (λg. g 6 7 8 9 1 2 3 4 5)
     (λg. g 9 1 2 3 4 5 6 7 8)
-#CHECKER example_sudoku3
-:set max-steps 0
 #* 
 =================PLAN================ (complete, yay)
 Make a sudoku checker
@@ -153,9 +151,8 @@ notes:
     without frying your computer, type in ":set max-steps 0", hit enter and then enter in the thing you 
     want to see.
   - Also, if you want to like CHECK example_sudoku_ you should:
-    + Type in "CHECKE" and yes the missing R is intentional
-    + Type in the rest, " example_sudoku"
-    + move your cursor to where the R is supposed to be and type in R.
+    + Type in "CHECKE example_sudoku" or 2 or 3 at the end, and yes the missing R is intentional
+      move your cursor to where the R is supposed to be and type in R.
     + Or, type "#CHECKER example_sudoku" and then remove the #.
   - You might need to crank those settings up a little
 *#
